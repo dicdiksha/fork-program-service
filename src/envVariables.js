@@ -26,9 +26,11 @@ const envVariables = {
         password: process.env.sunbird_program_db_password || 'password',
         port: process.env.sunbird_program_db_port || 5432,
         dialect: process.env.sunbird_program_db_dialect || "postgres",
-        logging: process.env.sunbird_program_db_logging || true,
-        ssl: {
-          rejectUnauthorized: process.env.sunbird_program_db_sslverify || false,
+        logging: process.env.sunbird_program_db_logging || false,
+        dialectOptions: {
+          ssl: {
+            rejectUnauthorized: process.env.sunbird_program_db_rejectSslUnauthorized || false,
+          },
         },
         pool: {
             max: process.env.sunbird_program_db_pool ? Number(process.env.sunbird_program_db_pool) : 100
