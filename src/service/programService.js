@@ -928,7 +928,7 @@ function getProgramCountsByOrg(req, response) {
         loggerService.exitLog({responseCode: 'OK'}, logObject);
         return response.status(200).send(successResponse(rspObj));
       }
-
+      console.log("dbg: get tenant ok - now get org details");
       getOrganisationDetails(req, orgIds).then((orgData) => {
         _.forEach(orgData.data.result.response.content, function(el, index){
           el.program_count = apiRes[el.id].count;
@@ -937,6 +937,7 @@ function getProgramCountsByOrg(req, response) {
         loggerService.exitLog({responseCode: 'OK'}, logObject);
         return response.status(200).send(successResponse(rspObj));
       }, (error) => {
+        console.log("dbg: error when calling getOrganisationDetails - follow message does not include upstream error message");
         rspObj.responseCode = responseCode.SERVER_ERROR
         rspObj.errCode = programMessages.PROGRAMCOUNTS_BYORG.ORGSEARCH_FETCH.FAILED_CODE
         rspObj.errMsg = programMessages.PROGRAMCOUNTS_BYORG.ORGSEARCH_FETCH.FAILED_MESSAGE
@@ -966,6 +967,11 @@ function getProgramCountsByOrg(req, response) {
       "fields": ["id", "slug", "orgName", "orgCode", "imgUrl"]
     }
   }
+  console.log(url);
+  console.log(JSON.stringify(reqData, null, 2));
+  // if axio throw exception - need to show the real error in the calling function
+  // question is how to catch the error and display the result
+  // should now just return but enclose the object and handle gracefully 
   return axios({
     method: 'post',
     url: url,
