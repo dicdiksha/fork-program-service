@@ -973,6 +973,10 @@ function getProgramCountsByOrg(req, response) {
   // if axio throw exception - need to show the real error in the calling function
   // question is how to catch the error and display the result
   // should now just return but enclose the object and handle gracefully 
+  //
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230415 by kenneth 
   return axios({
     method: 'post',
     url: url,
