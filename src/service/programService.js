@@ -1749,6 +1749,9 @@ function getUsersDetails(req, userList) {
       }
     }
   }
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230415 by kenneth 
   return axios({
     method: 'post',
     url: url,
@@ -1763,7 +1766,9 @@ function getUsersDetails(req, userList) {
       "id": "open-saber.registry.search",
       "request": request
     }
-
+    // special header handling for using OCI WAF
+    delete req.headers["zen-host"]; 
+    // 20230415 by kenneth 
     return axios({
       method: 'post',
       url: url,
@@ -1778,6 +1783,9 @@ function updateRegistry(request, reqHeaders) {
     "id": "open-saber.registry.update",
     "request": request
   }
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230415 by kenneth 
   return from(axios({
     method: 'post',
     url: url,
@@ -1792,6 +1800,9 @@ function deleteRegistry(request, reqHeaders) {
     "id": "open-saber.registry.delete",
     "request": request
   }
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230415 by kenneth 
   return from(axios({
     method: 'post',
     url: url,
@@ -1819,6 +1830,9 @@ function getOrgDetails(req, orgList) {
       }
     }
   }
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230415 by kenneth 
   return axios({
     method: 'post',
     url: url,
@@ -2225,7 +2239,9 @@ function programUpdateCollection(req, response) {
       }
     }
   }
-
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230415 by kenneth 
   const updateUrls = _.map(req.body.request.collection, collection => {
     return axios({
       method: 'patch',
