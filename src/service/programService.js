@@ -968,6 +968,7 @@ function getProgramCountsByOrg(req, response) {
     }
   }
   console.log(url);
+  console.log(JSON.stringify(req.headers, null, 2)); 
   console.log(JSON.stringify(reqData, null, 2));
   // if axio throw exception - need to show the real error in the calling function
   // question is how to catch the error and display the result
