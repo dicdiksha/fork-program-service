@@ -392,22 +392,35 @@ function getOsOrgForRootOrgId(rootorg_id, userRegData, reqHeaders) {
 }
 
 function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback) {
+  console.log("DEBUG: onAfterPublishProgram: entering onAfterPublishProgram - create null results");
   const onPublishResult = {};
   onPublishResult['nomination']= {};
   onPublishResult['userMapping']= {};
+  console.log("DEBUG: onAfterPublishProgram: calling getUserRegistryDetails");
+  console.log(JSON.stringify(programDetails.createdby));
   getUserRegistryDetails(programDetails.createdby).then((userRegData) => {
+    console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: calling getOsOrgForRootOrgId");
+    console.log(JSON.stringify(userRegData));
     getOsOrgForRootOrgId(programDetails.rootorg_id, userRegData, reqHeaders).then(async (osOrgforRootOrgRes) => {
+      console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId - entered");
       const iforgFoundInRegData = osOrgforRootOrgRes.orgFoundInRegData;
       const osOrgforRootOrg = osOrgforRootOrgRes.osOrgforRootOrg;
       const userOsid = _.get(userRegData, 'User.osid');
       const contribMapped = _.find(userRegData.User_Org, function(o) { return o.roles.includes('user') || o.roles.includes('admin') });
+      console.log(iforgFoundInRegData);
+      console.log(osOrgforRootOrg);
+      console.log(userOsid);
+      console.log(contribMapped);
+      console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId - check the values");
       if (userOsid && iforgFoundInRegData && !_.isEmpty(osOrgforRootOrg)) {
         // When in opensaber user is mapped to the org with OrgId as rootOrgId
+        console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId - empty - add or update DB via opensber");
         addOrUpdateNomination(programDetails, programDetails.createdby, osOrgforRootOrg.osid).then ((nominationRes) => {
           onPublishResult.nomination['error'] = null;
           onPublishResult.nomination['result'] = nominationRes;
           afterPublishCallback(onPublishResult);
         }).catch((error) => {
+          console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId - empty - error when update opensber");
           onPublishResult.nomination['error'] = error;
           onPublishResult.nomination['result'] = {};
           afterPublishCallback(onPublishResult);
@@ -423,12 +436,15 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
       } else if (userOsid && !iforgFoundInRegData && !_.isEmpty(osOrgforRootOrg)) {
         // When in opensaber user is *not mapped to the org with OrgId as rootOrgId, but we found a org with orgId as rootorgId through query
         // We can map that user to the found org only when user is not mapped to any other org as 'user' or 'admin'
+        console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId - opensaber user is not MAPPED - map the user to org");
         if (!_.isEmpty(contribMapped)) {
           addOrUpdateNomination(programDetails, programDetails.createdby, osOrgforRootOrg.osid).then ((nominationRes) => {
+            console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId: addOrUpdateNomination - user mapped, return result");
             onPublishResult.nomination['error'] = null;
             onPublishResult.nomination['result'] = nominationRes;
             afterPublishCallback(onPublishResult);
           }).catch((error) => {
+            console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId: addOrUpdateNomination - error mapping user");
             onPublishResult.nomination['error'] = error;
             onPublishResult.nomination['result'] = {};
             afterPublishCallback(onPublishResult);
@@ -455,6 +471,7 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
                   onPublishResult.nomination['result'] = nominationRes;
                   afterPublishCallback(onPublishResult);
                 }).catch((error) => {
+                  console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId: addOrUpdateNomination: addOrUpdateNomination - error mapping user");
                   onPublishResult.nomination['error'] = error;
                   onPublishResult.nomination['result'] = {};
                   afterPublishCallback(onPublishResult);
@@ -506,12 +523,14 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
                 }).catch((error) => {
                   onPublishResult.userMapping['error'] = error;
                   onPublishResult.userMapping['result'] = { };
+                  console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId: addOrUpdateNomination: addOrUpdateNomination - error mapping user 526");
                   console.log(JSON.stringify(error));
                   logger.error({ msg: 'Error- while adding users to contrib org',
                   additionalInfo: { rootorg_id: programDetails.rootorg_id, orgOsid: _.get(userReg,'User_Org.orgId') } }, {});
                 });
               }
             }).catch((error) => {
+                console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId: addOrUpdateNomination: addOrUpdateNomination - error mapping user 533");
                 console.log(JSON.stringify(error));
                 onPublishResult.nomination['error'] = nominationRes;
                 onPublishResult.nomination['result'] = {};
@@ -544,11 +563,13 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
       }
     })
     .catch((error) => {
+      console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId: addOrUpdateNomination: addOrUpdateNomination - error mapping user 566");
       console.error(JSON.stringify(error));
       onPublishResult['error'] = {"msg": "getOsOrgForRootOrgId failed " + error.message};
       afterPublishCallback(onPublishResult);
     })
   }).catch((error) => {
+    console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId: addOrUpdateNomination: addOrUpdateNomination - error mapping user 572");
     console.error(JSON.stringify(error));
     onPublishResult['error'] = error;
     afterPublishCallback(onPublishResult);
