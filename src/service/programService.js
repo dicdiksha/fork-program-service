@@ -1505,6 +1505,9 @@ async function downloadProgramDetails(req, res) {
         });
       });
     }
+    // special header handling for using OCI WAF
+    delete req.headers["zen-host"]; 
+    // 20230415 by kenneth 
     promiseRequests =  _.map(filteredPrograms, (program) => {
       if (!data.request.filters.targetType  || data.request.filters.targetType === 'collections') {
         return [programServiceHelper.getCollectionWithProgramId(program, req), programServiceHelper.getSampleContentWithOrgId(program, req),programServiceHelper.getSampleContentWithCreatedBy(program, req), programServiceHelper.getContributionWithProgramId(program, req), programServiceHelper.getNominationWithProgramId(program), programServiceHelper.getOveralNominationData(program)];
