@@ -1601,6 +1601,9 @@ function aggregatedNominationCount(data, result) {
  function downloadNominationList(req, response) {
   var data = req.body;
   var rspObj = req.rspObj;
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230415 by kenneth  
   const logObject = {
     traceId : req.headers['x-request-id'] || '',
     message : programMessages.NOMINATION.DOWNLOAD_LIST.INFO
