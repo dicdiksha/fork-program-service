@@ -845,8 +845,11 @@ function getUserRegistryDetails(userId, reqHeaders) {
   // special header handling for using OCI WAF
   console.log("DEBUG: getUserRegistryDetails: Entered getUserRegistryDetails");
   userRegData['User'] = {};
+  console.log("DEBUG: getUserRegistryDetails: setup done userRegData - User");  
   userRegData['Error'] = null;
+  console.log("DEBUG: getUserRegistryDetails: setup done userRegData - Error");
   let tempMapping = [];
+  console.log("DEBUG: getUserRegistryDetails: setup done tempMapping");
   let userRequest = {
     entityType: ["User"],
     filters: {
