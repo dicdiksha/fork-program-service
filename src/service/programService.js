@@ -841,9 +841,8 @@ function addOrUpdateNomination(programDetails, user_id, orgosid) {
 }
 
 function getUserRegistryDetails(userId, reqHeaders) {
-  // remove reqHeader unwanted 
-  // special header handling for using OCI WAF
   console.log("DEBUG: getUserRegistryDetails: Entered getUserRegistryDetails");
+  const userRegData = {};
   userRegData['User'] = {};
   console.log("DEBUG: getUserRegistryDetails: setup done userRegData - User");  
   userRegData['Error'] = null;
