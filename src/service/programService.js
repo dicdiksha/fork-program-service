@@ -184,6 +184,10 @@ function publishProgram(req, response) {
   }
   loggerService.entryLog(reqBody, logObject);
 
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"]; 
+  // 20230419 by kenneth   
+  
   if (!reqBody.request || !reqBody.request.program_id || !reqBody.request.channel) {
     req.rspObj.errCode = programMessages.PUBLISH.MISSING_CODE
     req.rspObj.errMsg = programMessages.PUBLISH.MISSING_MESSAGE
@@ -406,9 +410,6 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
   console.log("DEBUG: onAfterPublishProgram: calling getUserRegistryDetails");
   console.log(JSON.stringify(programDetails.createdby));
   console.log(JSON.stringify(reqHeaders));
-  // special header handling for using OCI WAF
-  delete reqHeaders["zen-host"];
-  // 20230415 by kenneth
   getUserRegistryDetails(programDetails.createdby).then((userRegData) => {
     console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: calling getOsOrgForRootOrgId");
     console.log(JSON.stringify(programDetails));
