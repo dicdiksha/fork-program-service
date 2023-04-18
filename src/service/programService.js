@@ -1773,7 +1773,7 @@ function getUsersDetails(req, userList) {
       "request": request
     }
     // special header handling for using OCI WAF
-    delete req.headers["zen-host"]; 
+    delete reqHeaders["zen-host"]; 
     // 20230415 by kenneth 
     return axios({
       method: 'post',
@@ -1790,7 +1790,7 @@ function updateRegistry(request, reqHeaders) {
     "request": request
   }
   // special header handling for using OCI WAF
-  delete req.headers["zen-host"]; 
+  delete reqHeaders["zen-host"]; 
   // 20230415 by kenneth 
   return from(axios({
     method: 'post',
@@ -1807,7 +1807,7 @@ function deleteRegistry(request, reqHeaders) {
     "request": request
   }
   // special header handling for using OCI WAF
-  delete req.headers["zen-host"]; 
+  delete reqHeaders["zen-host"]; 
   // 20230415 by kenneth 
   return from(axios({
     method: 'post',
