@@ -407,7 +407,7 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
   console.log(JSON.stringify(programDetails.createdby));
   console.log(JSON.stringify(reqHeaders));
   // special header handling for using OCI WAF
-  delete req.headers["zen-host"];
+  delete reqHeaders["zen-host"];
   // 20230415 by kenneth
   getUserRegistryDetails(programDetails.createdby).then((userRegData) => {
     console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: calling getOsOrgForRootOrgId");
@@ -843,9 +843,6 @@ function addOrUpdateNomination(programDetails, user_id, orgosid) {
 function getUserRegistryDetails(userId, reqHeaders) {
   // remove reqHeader unwanted 
   // special header handling for using OCI WAF
-  delete req.headers["zen-host"];
-  // 20230415 by kenneth
-  const userRegData = {};
   console.log("DEBUG: getUserRegistryDetails: Entered getUserRegistryDetails");
   userRegData['User'] = {};
   userRegData['Error'] = null;
