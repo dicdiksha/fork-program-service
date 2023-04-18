@@ -405,6 +405,7 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
   onPublishResult['userMapping']= {};
   console.log("DEBUG: onAfterPublishProgram: calling getUserRegistryDetails");
   console.log(JSON.stringify(programDetails.createdby));
+  
   getUserRegistryDetails(programDetails.createdby).then((userRegData) => {
     console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: calling getOsOrgForRootOrgId");
     console.log(JSON.stringify(programDetails));
@@ -837,7 +838,12 @@ function addOrUpdateNomination(programDetails, user_id, orgosid) {
 }
 
 function getUserRegistryDetails(userId, reqHeaders) {
+  // remove reqHeader unwanted 
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"];
+  // 20230415 by kenneth
   const userRegData = {};
+  console.log("DEBUG: getUserRegistryDetails: Entered getUserRegistryDetails");
   userRegData['User'] = {};
   userRegData['Error'] = null;
   let tempMapping = [];
@@ -849,7 +855,9 @@ function getUserRegistryDetails(userId, reqHeaders) {
       }
     }
   }
+  console.log("DEBUG: getUserRegistryDetails: calling promise");
   return new Promise((resolve, reject) => {
+      console.log("DEBUG: getUserRegistryDetails: in promise - call earch registry"); 
       searchRegistry(userRequest, reqHeaders).then((res1)=> {
         if (res1 && res1.status == 200) {
           if (res1.data.result.User.length > 0) {
@@ -883,13 +891,16 @@ function getUserRegistryDetails(userId, reqHeaders) {
                       });
                       return resolve(userRegData);
                     } else {
+                      console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 894"); 
                       userRegData['Error'] = {"error": true, "msg": "OS search error: Error while searching OsOrg for" + userId + ":" + userRegData.User.osid};
                       return reject(userRegData);
                     }
                   }, (res3Error)=> {
+                    console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 898"); 
                     userRegData['Error'] = res3Error || {"error": true, "msg": "OS search error: Error while searching OsOrg for" + userId + ":" + userRegData.User.osid};
                     return reject(userRegData);
                   }).catch((error)=>{
+                    console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 903"); 
                     userRegData['Error'] = error || {"error": true, "msg": "OS search error: Error while searching OsOrg for" + userId + ":" + userRegData.User.osid};;
                     return reject(userRegData);
                   });
@@ -897,14 +908,17 @@ function getUserRegistryDetails(userId, reqHeaders) {
                   return resolve(userRegData);
                 }
               } else {
+                console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 911"); 
                 userRegData['Error'] = {"error": true, "msg": "OS search error: Error while searching OsUserOrg for " + userId + ":" + userRegData.User.osid};
                 return reject(userRegData);
               }
             },
             (res2error)=> {
+              console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 917"); 
               userRegData['Error'] = res2error || {"error": true, "msg": "OS search error: Error while searching OsUserOrg for " + userId + ":" + userRegData.User.osid};
               return reject(userRegData);
             }).catch((error)=> {
+              console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 921"); 
               userRegData['Error'] = error || {"error": true, "msg": "OS search error: Error while searching OsUserOrg for " + userId + ":" + userRegData.User.osid};
               return reject(userRegData);
             });
@@ -912,13 +926,16 @@ function getUserRegistryDetails(userId, reqHeaders) {
             return resolve(userRegData);
           }
         } else {
+          console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 929"); 
           userRegData['Error'] = {"error": true, "msg": "OS search error : Error while searching OsUser for " + userId};
           return reject(userRegData);
         }
       }, (res1Error) => {
         userRegData['Error'] = res1Error || {"error": true, "msg": "OS search error : Error while searching OsUser for " + userId};;
+        console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 935"); 
         return reject(userRegData);
       }).catch((error) => {
+        console.log("DEBUG: getUserRegistryDetails: in promise - searchRegistry error 938"); 
         userRegData['Error'] = error || {"error": true, "msg": "OS search error : Error while searching OsUser for " + userId};;
         return reject(userRegData);
       });
