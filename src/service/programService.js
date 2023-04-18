@@ -405,7 +405,10 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
   onPublishResult['userMapping']= {};
   console.log("DEBUG: onAfterPublishProgram: calling getUserRegistryDetails");
   console.log(JSON.stringify(programDetails.createdby));
-  
+  console.log(JSON.stringify(reqHeaders));
+  // special header handling for using OCI WAF
+  delete req.headers["zen-host"];
+  // 20230415 by kenneth
   getUserRegistryDetails(programDetails.createdby).then((userRegData) => {
     console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: calling getOsOrgForRootOrgId");
     console.log(JSON.stringify(programDetails));
