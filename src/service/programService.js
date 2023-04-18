@@ -346,9 +346,12 @@ const publishCallback = function(errObj, req, response, program, copyCollectionR
 }*/
 
 function getOsOrgForRootOrgId(rootorg_id, userRegData, reqHeaders) {
+    console.log("DEBUG: entered getOsOrgForRootOrgId - dump request header");
+    console.error(JSON.stringify(reqHeaders));
     let returnRes = {};
     // for some reason if user is not mapped to the osOrg where orgId = rootOrg_id,
     return new Promise((resolve, reject) => {
+      console.log("DEBUG: entered getOsOrgForRootOrgId - enter promise");
       let osOrgforRootOrgInRegData = {}
       if (!_.isEmpty(_.get(userRegData, 'Org'))) {
         returnRes['osOrgforRootOrg'] =  _.find(_.get(userRegData, 'Org'), {
@@ -369,8 +372,10 @@ function getOsOrgForRootOrgId(rootorg_id, userRegData, reqHeaders) {
           }
         }
         const osOrgSeachErr = {"error": true, "msg": "OS search error: Error while searching OsOrg for orgId ${rootorg_id}"};
-
+        console.log("DEBUG: getOsOrgForRootOrgId: calling searchRegistry");
+        console.error(JSON.stringify(orgRequest));
         searchRegistry(orgRequest, reqHeaders).then((orgRes)=> {
+          console.log("DEBUG: entered getOsOrgForRootOrgId - OS search error: Error while searching OsOrg for orgId 375");
           if (orgRes && orgRes.status == 200) {
             if (orgRes.data.result.Org.length > 0) {
               returnRes['osOrgforRootOrg'] = _.first(orgRes.data.result.Org);
@@ -383,8 +388,10 @@ function getOsOrgForRootOrgId(rootorg_id, userRegData, reqHeaders) {
             return reject(osOrgSeachErr);
           }
         }, (res3Error)=> {
+          console.log("DEBUG: getOsOrgForRootOrgId: org search error 391");
           return reject(res3Error || osOrgSeachErr);
         }).catch((error)=>{
+          console.log("DEBUG: getOsOrgForRootOrgId: org search error 394");
           return reject(error || osOrgSeachErr);
         });
       }
@@ -400,6 +407,7 @@ function onAfterPublishProgram(programDetails, reqHeaders, afterPublishCallback)
   console.log(JSON.stringify(programDetails.createdby));
   getUserRegistryDetails(programDetails.createdby).then((userRegData) => {
     console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: calling getOsOrgForRootOrgId");
+    console.log(JSON.stringify(programDetails));
     console.log(JSON.stringify(userRegData));
     getOsOrgForRootOrgId(programDetails.rootorg_id, userRegData, reqHeaders).then(async (osOrgforRootOrgRes) => {
       console.log("DEBUG: onAfterPublishProgram: getUserRegistryDetails: getOsOrgForRootOrgId - entered");
