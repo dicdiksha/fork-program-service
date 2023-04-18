@@ -1803,9 +1803,7 @@ function getUsersDetails(req, userList) {
       }
     }
   }
-  // special header handling for using OCI WAF
-  delete req.headers["zen-host"]; 
-  // 20230415 by kenneth 
+
   return axios({
     method: 'post',
     url: url,
@@ -1820,9 +1818,7 @@ function getUsersDetails(req, userList) {
       "id": "open-saber.registry.search",
       "request": request
     }
-    // special header handling for using OCI WAF
-    delete reqHeaders["zen-host"]; 
-    // 20230415 by kenneth 
+
     return axios({
       method: 'post',
       url: url,
@@ -1837,9 +1833,7 @@ function updateRegistry(request, reqHeaders) {
     "id": "open-saber.registry.update",
     "request": request
   }
-  // special header handling for using OCI WAF
-  delete reqHeaders["zen-host"]; 
-  // 20230415 by kenneth 
+
   return from(axios({
     method: 'post',
     url: url,
@@ -1854,9 +1848,7 @@ function deleteRegistry(request, reqHeaders) {
     "id": "open-saber.registry.delete",
     "request": request
   }
-  // special header handling for using OCI WAF
-  delete reqHeaders["zen-host"]; 
-  // 20230415 by kenneth 
+
   return from(axios({
     method: 'post',
     url: url,
