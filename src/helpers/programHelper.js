@@ -27,6 +27,8 @@ const notificationService = new NotificationService();
 class ProgramServiceHelper {
 
   searchContent(programId, sampleContentCheck, reqHeaders) {
+    // removing WAF header
+    delete reqHeaders["zen-host"]; 
     const url = `${envVariables.baseURL}/api/composite/v1/search`
     const option = {
       url,
@@ -125,6 +127,8 @@ class ProgramServiceHelper {
   }
 
   searchWithProgramId(queryFilter, req) {
+    // remove WAF header
+    delete req.headers["zen-host"]; 
     const headers = {
         'content-type': 'application/json',
       };
@@ -447,6 +451,8 @@ class ProgramServiceHelper {
   }
 
   hierarchyRequest(req, collectionId) {
+    // remove WAF header
+    delete req.headers["zen-host"]; 
     const option = {
       url: `${envVariables.baseURL}/action/collection/v4/hierarchy/${collectionId}?mode=edit`,
       method: 'get',
@@ -863,6 +869,8 @@ class ProgramServiceHelper {
   }
 
   getUserDetails(userId, reqHeaders) {
+    // remove WAF header
+    delete reqHeaders["zen-host"]; 
     const option = {
       url: `${envVariables.baseURL}/learner/user/v3/search`,
       method: 'POST',
@@ -905,6 +913,8 @@ class ProgramServiceHelper {
   }
 
   getSourcingOrgUsers(reqHeaders, reqFilters, offset, limit) {
+    // remove WAF header
+    delete reqHeaders["zen-host"]; 
     const req = {
       url: `${envVariables.baseURL}/learner/user/v3/search`,
       method: 'post',
