@@ -29,6 +29,8 @@ const searchNominations = (query) => {
 }
 
 const searchContributions = (query, headers) => {
+  // remove WAF awared header
+  delete headers["zen-host"];
   const request = {
     url: `${envVariables.baseURL}/api/composite/v1/search`,
     method: 'post',
@@ -61,7 +63,7 @@ const searchContributions = (query, headers) => {
         ]
       }
     }
-  }
+  };
   return axios(request)
 }
 
@@ -78,6 +80,8 @@ const getNumberOfDays = async (query) => {
 }
 
 const getCollections = (contents, headers) => {
+  // remove WAF awared header
+  delete headers["zen-host"];
   const collectionIds = _.map(contents, 'collectionId');
   const uniqCollectionIds = _.uniq(collectionIds);
   const request = {
