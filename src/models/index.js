@@ -5,9 +5,15 @@ const Sequelize = require('sequelize')
       basename  = path.basename(module.filename);
 
 const HelperService = require('../helpers/helperService');
+const envVariables = require('../envVariables');
 
 var db = {};
 var sequelize = new Sequelize(envVariables.config.database, envVariables.config.user, envVariables.config.password, envVariables.config);
+
+logger.info("host => ", envVariables.config.host);
+logger.info("database => ", envVariables.config.database);
+logger.info("user => ", envVariables.config.user);
+logger.info("password => ", envVariables.config.password);
 
 fs.readdirSync(__dirname)
   .filter(function(file) {

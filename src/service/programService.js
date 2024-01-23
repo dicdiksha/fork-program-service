@@ -971,12 +971,14 @@ function getProgramCountsByOrg(req, response) {
     attributes: [...facets, [Sequelize.fn('count', Sequelize.col(facets[0])), 'count']],
     group: [...facets]
   }).then((result) => {
+    logger.info("response of the posgresql db = ",result)
       const apiRes = _.keyBy(_.map(result, 'dataValues'), 'rootorg_id');
       const orgIds = _.compact(_.map(apiRes, 'rootorg_id'));
       if (_.isEmpty(result) || _.isEmpty(orgIds)) {
         loggerService.exitLog({responseCode: 'OK'}, logObject);
         return response.status(200).send(successResponse(rspObj));
       }
+      logger.info("dbg: get tenant ok - now get org details",orgIds)
       console.log("dbg: get tenant ok - now get org details");
       getOrganisationDetails(req, orgIds).then((orgData) => {
         _.forEach(orgData.data.result.response.content, function(el, index){
@@ -986,6 +988,7 @@ function getProgramCountsByOrg(req, response) {
         loggerService.exitLog({responseCode: 'OK'}, logObject);
         return response.status(200).send(successResponse(rspObj));
       }, (error) => {
+        logger.info("dbg: error when calling getOrganisationDetails - follow message does not include upstream error message");
         console.log("dbg: error when calling getOrganisationDetails - follow message does not include upstream error message");
         rspObj.responseCode = responseCode.SERVER_ERROR
         rspObj.errCode = programMessages.PROGRAMCOUNTS_BYORG.ORGSEARCH_FETCH.FAILED_CODE
@@ -997,6 +1000,7 @@ function getProgramCountsByOrg(req, response) {
       })
   }).catch((err) => {
     rspObj.responseCode = responseCode.SERVER_ERROR
+    logger.info("db error => ",err)
     loggerService.exitLog({responseCode: rspObj.responseCode}, logObject);
     loggerError(rspObj,errCode+errorCodes.CODE2);
     return response.status(400).send(errorResponse(rspObj,errCode+errorCodes.CODE2));
@@ -1004,7 +1008,7 @@ function getProgramCountsByOrg(req, response) {
 }
 
  /* Get the org details by filters*/
- function getOrganisationDetails(req, orgList) {
+ function   getOrganisationDetails(req, orgList) {
   const url = `${envVariables.baseURL}/learner/org/v2/search`;
   const reqData = {
     "request": {
