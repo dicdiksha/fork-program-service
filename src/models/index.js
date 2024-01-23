@@ -5,6 +5,7 @@ const Sequelize = require('sequelize')
       basename  = path.basename(module.filename);
 
 const HelperService = require('../helpers/helperService');
+const logger = require('sb_logger_util_v2');
 
 var db = {};
 var sequelize = new Sequelize(envVariables.config.database, envVariables.config.user, envVariables.config.password, envVariables.config);
