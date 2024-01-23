@@ -11,9 +11,17 @@ var db = {};
 var sequelize = new Sequelize(envVariables.config.database, envVariables.config.user, envVariables.config.password, envVariables.config);
 
 logger.info("host => ", envVariables.config.host);
+console.log("host => ", envVariables.config.host);
+
 logger.info("database => ", envVariables.config.database);
+console.log("database => ", envVariables.config.database);
+
 logger.info("user => ", envVariables.config.user);
+console.log("user => ", envVariables.config.user);
+
 logger.info("password => ", envVariables.config.password);
+console.log("password => ", envVariables.config.password);
+
 
 fs.readdirSync(__dirname)
   .filter(function(file) {

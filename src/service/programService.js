@@ -1000,9 +1000,11 @@ function getProgramCountsByOrg(req, response) {
       })
   }).catch((err) => {
     rspObj.responseCode = responseCode.SERVER_ERROR
-    logger.info("db error => ",err)
+    logger.info({msg:'db error => ',err});
+    console.log("db error => ",err);
     loggerService.exitLog({responseCode: rspObj.responseCode}, logObject);
     loggerError(rspObj,errCode+errorCodes.CODE2);
+    loggerError(err,errCode+errorCodes.CODE2)
     return response.status(400).send(errorResponse(rspObj,errCode+errorCodes.CODE2));
   });
 }
